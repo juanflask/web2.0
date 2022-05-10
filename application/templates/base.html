@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+	<title>Blog de Cryptos</title>
+</head>
+<body>
+	<header>
+		<nav>
+			<a href="{{ url_for('mainpages_bp.index') }}">Home</a>
+			<a href="{{ url_for('mainpages_bp.articulos') }}">Artículos</a> <!-- Consultar esto -->
+			<a href="{{ url_for('mainpages_bp.contacto') }}">Contacto</a>
+			<a href="{{ url_for('auth_bp.signup') }}">Sign Up</a>
+			<a href="{{ url_for('auth_bp.login') }}">Login</a>
+			<a href="{{ url_for('auth_bp.logout') }}">Logout</a>
+
+		</nav>
+		
+	</header>
+	
+
+	{% block content %}
+
+	{% endblock %}
+	
+	<footer>
+		Copyright 2022 Juan
+	</footer>
+
+</body>
+</html>
