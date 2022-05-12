@@ -5,6 +5,7 @@ from flask_wtf import FlaskForm
 from flask_login import LoginManager, UserMixin, login_required, logout_user, login_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from application.bd import get_db_connection, close_db
+from .models import User
 
 mainpages_bp = Blueprint('mainpages_bp', __name__)
 
@@ -14,20 +15,20 @@ auth_bp = Blueprint('auth_bp', __name__)
 @auth_bp.route("/logout")
 def logout():
 	logout_user()
-	return redirect(url_for('index')) 
+	return redirect(url_for('mainpages_bp.index')) 
 
 
 @auth_bp.route("/login", methods = ['GET', 'POST'])
 def login():
 	if current_user.is_authenticated:
-		return redirect(url_for('index'))
+		return redirect(url_for('mainpages_bp.index'))
 	form = Form_Login()
 
 	if request.method == 'POST':
 		print('Solicitud POST')
 		if form.validate_on_submit():
 			print('Formulario validado')
-			conn = sqlite3.connect('database.db')
+			conn = get_db_connection()
 			curs = conn.cursor()
 			curs.execute("SELECT * FROM login_usuario WHERE usuario = (?)", [form.usuario.data])
 			if curs.fetchone() == None:
@@ -36,15 +37,15 @@ def login():
 
 			else:
 				curs.execute("SELECT * FROM login_usuario WHERE usuario = (?)", [form.usuario.data])
-				user = list(curs.fetchone())
-				Us = load_user(user[0])
-				print(f"US: {Us}")
-				if form.usuario.data == Us.usuario and check_password_hash(Us.password, form.password.data):
+				user = curs.fetchone()
+				print(f"US: {user}")
+				if form.usuario.data == user[1] and check_password_hash(user[2], form.password.data):
 					print('email y password correctos')
-					login_user(Us, remember = form.remember.data)
+					mixed_user = User(user[0], user[1], user[2])
+					login_user(mixed_user, remember = form.remember.data)
 					Umail = list({form.usuario.data})[0].split('@')[0]
 					print('Logged in successfully ' + Umail)
-					return redirect(url_for('index'))
+					return redirect(url_for('mainpages_bp.index'))
 				
 				else:
 					flash('Contraseña incorrecta')
@@ -65,7 +66,7 @@ def signup():
 		conn.commit()
 		close_db()
 
-		return redirect(url_for('index'))
+		return redirect(url_for('mainpages_bp.index'))
 	
 	else:
 		return render_template("signup_form.html", form=form)
@@ -131,6 +132,7 @@ def articulos():
 	return render_template('articulos.html', articulos=articulos)
 
 @mainpages_bp.route("/articulos_admin")
+@login_required
 def articulos_admin():
 	conn = get_db_connection()
 	articulos = conn.execute('SELECT * FROM articulos ORDER BY fecha DESC').fetchall()
