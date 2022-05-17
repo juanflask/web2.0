@@ -8,6 +8,12 @@
     <p>{{ articulo['fecha']}}</p>
     <p>{{ articulo['articulo']}}</p>
     <a href="{{ url_for('mainpages_bp.ver_articulo', id=articulo['id']) }}">Ir a artículo</a>
+    
+    {% if current_user.nivel == "admin" %}
+        <form action="{{ url_for('mainpages_bp.borrar_articulo', id=articulo['id']) }}" method="POST">
+        <input type="submit" value="Borrar artículo">
+    {% endif %}
+
 {% endfor %}
 
 {% endblock %}

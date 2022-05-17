@@ -27,7 +27,7 @@ def init_app():
         if lu is None:
             return None
         else:
-            return User(lu[0], lu[1], lu[2])
+            return User(lu[0], lu[1], lu[2], lu[3])
 
     with app.app_context():
         from . import route

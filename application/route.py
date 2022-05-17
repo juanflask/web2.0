@@ -41,7 +41,7 @@ def login():
 				print(f"US: {user}")
 				if form.usuario.data == user[1] and check_password_hash(user[2], form.password.data):
 					print('email y password correctos')
-					mixed_user = User(user[0], user[1], user[2])
+					mixed_user = User(user[0], user[1], user[2], user[3])
 					login_user(mixed_user, remember = form.remember.data)
 					Umail = list({form.usuario.data})[0].split('@')[0]
 					print('Logged in successfully ' + Umail)
@@ -99,6 +99,10 @@ def contacto():
 
 @mainpages_bp.route("/crear_articulos", methods=["GET", "POST"])
 def crea_articulos():
+	print(current_user.nivel)
+	if current_user.is_anonymous == True or current_user.nivel != "admin":
+			return render_template("no_autorizado.html")
+
 	form = form_crea_articulos(request.form)
 	if request.method == "POST":
 		titulo= form.titulo.data
@@ -115,6 +119,8 @@ def crea_articulos():
 	
 	else:
 		return render_template("crea_articulos.html", form=form)
+
+		
 
 
 @mainpages_bp.route("/mensajes")

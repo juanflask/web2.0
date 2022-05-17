@@ -1,6 +1,8 @@
 {% from "_macroform.html" import render_field  %}
 {% extends "base.html" %}
 
+
+
 {% block content %}
 <form method=POST>
     <dl class="formulario">
@@ -9,8 +11,6 @@
         {{ render_field(form.button) }}
 
     </dl>
-    
-
 </form>
 
 {% endblock %}
