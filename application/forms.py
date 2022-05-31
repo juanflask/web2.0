@@ -1,4 +1,4 @@
-from wtforms import Form, StringField, EmailField, TextAreaField, SubmitField, DateTimeField, validators, PasswordField, BooleanField
+from wtforms import Form, StringField, EmailField, TextAreaField, SubmitField, DateTimeField, validators, PasswordField, BooleanField, RadioField
 from flask_wtf import FlaskForm
 
 class formulario(Form):
@@ -27,5 +27,9 @@ class Form_Signup(Form):
     usuario = StringField("usuario")
     password = PasswordField("contraseña")
     boton = SubmitField("Enviar")
+
+class Tags(Form):
+    nivel = RadioField('nivel', choices = [('Principiante','Principiante'), ('Medio', 'Medio'), ('Avanzado', 'Avanzado')])
+    red = RadioField('red', choices = [('Bitcoin','Bitcoin'), ('ETH', 'ETH'), ('BEP2', 'BEP2')])
 
 

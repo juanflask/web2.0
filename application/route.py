@@ -1,6 +1,6 @@
 import sqlite3
 from flask import Flask, render_template, request, url_for, redirect, abort, flash, Blueprint
-from application.forms import formulario, form_crea_articulos, Form_Comentarios, Form_Login, Form_Signup
+from application.forms import formulario, form_crea_articulos, Form_Comentarios, Form_Login, Form_Signup, Tags
 from flask_wtf import FlaskForm
 from flask_login import LoginManager, UserMixin, login_required, logout_user, login_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -104,6 +104,7 @@ def crea_articulos():
 			return render_template("no_autorizado.html")
 
 	form = form_crea_articulos(request.form)
+	tags_form = Tags(request.form)
 	if request.method == "POST":
 		titulo= form.titulo.data
 		articulo = form.articulo.data
@@ -118,7 +119,7 @@ def crea_articulos():
 		# A modificar después 
 	
 	else:
-		return render_template("crea_articulos.html", form=form)
+		return render_template("crea_articulos.html", form=form, tags_form=tags_form)
 
 		
 
